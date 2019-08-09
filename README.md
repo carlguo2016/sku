@@ -58,7 +58,7 @@ methods: {
   }
 }
 
-<speciication :spec="" :sku="" @change-spec="" @change-sku="" />
+<speciication :spec="spec" :sku="sku" @change-spec="handleChangeSpec" @change-sku="handleChangeSku" />
 ```
 
 ![demo](./src/assets/17_31_36__08_08_2019.jpg)
