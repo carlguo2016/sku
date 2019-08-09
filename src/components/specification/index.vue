@@ -32,46 +32,59 @@
       </el-tooltip>
       <el-button v-else type="primary" class="standard-btn" size="mini" plain @click="handlePushSpecification">添加规格</el-button>
     </div>
-    <el-table v-if="specification.length" style="margin-top: 10px" border :data="data" :span-method="handleSpanMethod">
-      <el-table-column
-        v-for="(item, indent) in specification"
-        :key="indent"
-        :prop="item.name"
-        :label="item.name">
-      </el-table-column>
-      <el-table-column
-        prop="price"
-        label="价格"
-        width="120">
-        <template slot-scope="scope">
-          <el-input v-model="scope.row.price" />
-        </template>
-      </el-table-column>
-      <el-table-column
-        prop="marked_price"
-        label="市场价"
-        width="120">
-         <template slot-scope="scope">
-          <el-input v-model="scope.row.marked_price" />
-        </template>
-      </el-table-column>
-      <el-table-column
-        prop="stock"
-        label="库存"
-        width="120">
-         <template slot-scope="scope">
-          <el-input v-model="scope.row.stock" />
-        </template>
-      </el-table-column>
-    </el-table>
-    <h3>规格</h3>
-    <small><pre>{{specification}}</pre></small>
-    <h3>库存组合</h3>
-    <small><pre>{{skus}}</pre></small>
-    <h3>表格数据</h3>
-    <small><pre>{{data}}</pre></small>
-    <h3>合并表格行</h3>
-    <small><pre>{{spanCollection}}</pre></small>
+    <template v-if="skus.length">
+      <el-table style="margin-top: 10px" border :data="data" :span-method="handleSpanMethod">
+        <el-table-column
+          v-for="(item, indent) in specification"
+          :key="indent"
+          :prop="item.name"
+          :label="item.name">
+        </el-table-column>
+        <el-table-column
+          prop="price"
+          label="价格"
+          width="120">
+          <template slot-scope="scope">
+            <el-input size="mini" v-model="skus[scope.$index].price" />
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="marked_price"
+          label="市场价"
+          width="120">
+          <template slot-scope="scope">
+            <el-input size="mini" v-model="skus[scope.$index].marked_price" />
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="stock"
+          label="库存"
+          width="120">
+          <template slot-scope="scope">
+            <el-input size="mini" v-model="skus[scope.$index].stock" />
+          </template>
+        </el-table-column>
+      </el-table>
+      <div class="standard-tools">
+        <span class="inline-text">批量设置</span>
+        <el-radio-group v-model="mode" size="mini">
+          <el-radio-button label="price">价格</el-radio-button>
+          <el-radio-button label="marked_price">市场价</el-radio-button>
+          <el-radio-button label="stock">库存</el-radio-button>
+        </el-radio-group>
+        <el-input v-if="mode" v-model="value"><el-button type="primary" slot="append" icon="el-icon-setting" @click="handleSettingSkus"></el-button></el-input>
+      </div>
+    </template>
+    <template v-if="test">
+      <h3>规格</h3>
+      <small><pre>{{specification}}</pre></small>
+      <h3>库存组合</h3>
+      <small><pre>{{skus}}</pre></small>
+      <h3>表格数据</h3>
+      <small><pre>{{data}}</pre></small>
+      <h3>合并表格行</h3>
+      <small><pre>{{spanCollection}}</pre></small>
+    </template>
   </div>
 </template>
 
@@ -79,54 +92,29 @@
 import { uniq, cloneDeep, isEqual } from 'lodash'
 
 export default {
+  props: {
+    spec: Array,
+    sku: Array
+  },
   data () {
     return {
       test: false,
       max: 3,
-      image: true,
+      image: false,
       checked: false,
       // 规格集合
-      specification: [
-        {
-          name: '颜色',
-          attribute: [
-            '红色', '白色', '黑色'
-          ]
-        }
-      ],
+      specification: this.spec,
       // 库存集合
-      skus: [
-        {
-          price: 0,
-          stock: 0,
-          marked_price: 0,
-          combination: {
-            '颜色': '红色'
-          }
-        },
-        {
-          price: 0,
-          stock: 0,
-          marked_price: 0,
-          combination: {
-            '颜色': '白色'
-          }
-        },
-        {
-          price: 0,
-          stock: 0,
-          marked_price: 0,
-          combination: {
-            '颜色': '黑色'
-          }
-        }
-      ],
+      skus: this.sku,
       // 缓存input规格值
       attributeModelCache: [],
       // 缓存input切换状态
       visiableCache: [],
       data: [],
-      spanCollection: []
+      spanCollection: [],
+      // 快捷设置
+      mode: '',
+      value: ''
     }
   },
 
@@ -141,7 +129,18 @@ export default {
     }
   },
 
+  watch: {
+    spec () {
+      this.$emit('change-spec', this.spec)
+    },
+
+    skus () {
+      this.$emit('change-sku', this.skus)
+    }
+  },
+
   methods: {
+    // 计算table 每行重复
     computeRowspan () {
       this.spanCollection = []
       const rowspan = (name) => {
@@ -333,7 +332,7 @@ export default {
 
       for (let i = 0; i < this.specification.length; i++) {
         if (columnIndex === i) {
-          if (this.spanCollection[i][rowIndex]) {
+          if (this.spanCollection[i] && this.spanCollection[i][rowIndex]) {
             return {
               rowspan: this.spanCollection[i][rowIndex],
               colspan: 1
@@ -370,6 +369,14 @@ export default {
       } else {
         return false
       }
+    },
+
+    handleSettingSkus () {
+      if (this.value === '') return
+
+      this.skus.map(item => {
+        item[this.mode] = this.value
+      })
     }
   },
 
@@ -381,6 +388,44 @@ export default {
   },
 
   mounted () {
+    if (this.test) {
+      this.specification = [
+        {
+          name: '颜色',
+          attribute: [
+            '红色', '白色', '黑色'
+          ]
+        }
+      ]
+
+      this.skus = [
+        {
+          price: 0,
+          stock: 0,
+          marked_price: 0,
+          combination: {
+            '颜色': '红色'
+          }
+        },
+        {
+          price: 0,
+          stock: 0,
+          marked_price: 0,
+          combination: {
+            '颜色': '白色'
+          }
+        },
+        {
+          price: 0,
+          stock: 0,
+          marked_price: 0,
+          combination: {
+            '颜色': '黑色'
+          }
+        }
+      ]
+    }
+
     this.tableData()
   }
 }
@@ -454,6 +499,22 @@ export default {
     flex-flow: row wrap;
     align-items: flex-start;
     margin-bottom: 10px;
+  }
+
+  .standard-tools {
+    margin-top: 10px;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+
+    .inline-text {
+      margin-right: 10px
+    }
+
+    .el-input {
+      margin-left: 10px;
+      width: 150px;
+    }
   }
 }
 </style>
