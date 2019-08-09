@@ -32,7 +32,7 @@
       </el-tooltip>
       <el-button v-else type="primary" class="standard-btn" size="mini" plain @click="handlePushSpecification">添加规格</el-button>
     </div>
-    <template v-if="skus.length">
+    <template v-if="specification.length && skus.length">
       <el-table style="margin-top: 10px" border :data="data" :span-method="handleSpanMethod">
         <el-table-column
           v-for="(item, indent) in specification"
