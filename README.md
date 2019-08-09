@@ -1,5 +1,7 @@
 ## vue element-ui 商品sku编辑组件demo
 
+[Demo Page](https://easeava.github.io/vue-sku/)
+
 ```
 import Specification from '@/components/specification'
 
