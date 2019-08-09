@@ -43,25 +43,25 @@
         <el-table-column
           prop="price"
           label="价格"
-          width="120">
+          width="150">
           <template slot-scope="scope">
-            <el-input size="mini" v-model="skus[scope.$index].price" />
+            <el-input-number :min="0" controls-position="right" :precision="2" size="mini" v-model="skus[scope.$index].price" />
           </template>
         </el-table-column>
         <el-table-column
           prop="marked_price"
           label="市场价"
-          width="120">
+          width="150">
           <template slot-scope="scope">
-            <el-input size="mini" v-model="skus[scope.$index].marked_price" />
+            <el-input-number :min="0" controls-position="right" :precision="2" size="mini" v-model="skus[scope.$index].marked_price" />
           </template>
         </el-table-column>
         <el-table-column
           prop="stock"
           label="库存"
-          width="120">
+          width="150">
           <template slot-scope="scope">
-            <el-input size="mini" v-model="skus[scope.$index].stock" />
+            <el-input-number :min="0" controls-position="right" size="mini" v-model="skus[scope.$index].stock" />
           </template>
         </el-table-column>
       </el-table>
