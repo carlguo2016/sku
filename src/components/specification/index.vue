@@ -94,11 +94,12 @@ import { uniq, cloneDeep, isEqual } from 'lodash'
 export default {
   props: {
     spec: Array,
-    sku: Array
+    sku: Array,
+    // 测试
+    test: Boolean
   },
   data () {
     return {
-      test: false,
       max: 3,
       image: false,
       checked: false,
@@ -381,13 +382,6 @@ export default {
   },
 
   created () {
-    if (!this.test) {
-      this.specification = []
-      this.skus = []
-    }
-  },
-
-  mounted () {
     if (this.test) {
       this.specification = [
         {
@@ -425,7 +419,9 @@ export default {
         }
       ]
     }
+  },
 
+  mounted () {
     this.tableData()
   }
 }

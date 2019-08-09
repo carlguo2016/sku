@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div class="container">
-      <specification />
+      <specification test :spec="spec" :sku="sku" />
     </div>
   </div>
 </template>
@@ -10,8 +10,25 @@
 import Specification from '@/components/specification'
 
 export default {
+  data () {
+    return {
+      spec: [],
+      sku: []
+    }
+  },
+
   components: {
     Specification
+  },
+
+  methods: {
+    handleChangeSpec (spec) {
+      this.spec = spec
+    },
+
+    handleChangeSku (sku) {
+      this.sku = sku
+    }
   }
 }
 </script>
