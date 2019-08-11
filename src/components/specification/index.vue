@@ -131,12 +131,20 @@ export default {
   },
 
   watch: {
-    spec () {
+    specification () {
       this.$emit('change-spec', this.spec)
     },
 
     skus () {
       this.$emit('change-sku', this.skus)
+    },
+
+    spec () {
+      this.specification = this.spec
+    },
+
+    sku () {
+      this.skus = this.sku
     }
   },
 
