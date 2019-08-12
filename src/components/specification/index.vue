@@ -497,7 +497,7 @@ export default {
     padding: 10px 10px 0;
     display: flex;
     flex-flow: row wrap;
-    align-items: flex-start;
+    align-items: center;
     margin-bottom: 10px;
   }
 
