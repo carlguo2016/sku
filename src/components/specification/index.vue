@@ -135,8 +135,11 @@ export default {
       this.$emit('change-spec', this.spec)
     },
 
-    skus () {
-      this.$emit('change-sku', this.skus)
+    skus: {
+      handler () {
+        this.$emit('change-sku', this.skus)
+      },
+      deep: true
     },
 
     spec () {
@@ -145,6 +148,7 @@ export default {
 
     sku () {
       this.skus = this.sku
+      this.handleChangeStocks()
     }
   },
 
@@ -179,7 +183,6 @@ export default {
     },
     // 添加规格
     handlePushSpecification () {
-      console.log(this.enable)
       if (!this.enable) return
 
       this.specification.push({
@@ -240,7 +243,7 @@ export default {
           num *= item.attribute.length
         }
       })
-      // console.log(num)
+
       return num
     },
     // 监听规格值变化
@@ -251,8 +254,6 @@ export default {
       if (action === 'del') {
         this.skus = []
       }
-
-      console.log(this.computedSkus(0))
 
       for (let i = 0; i < this.computedSkus(0); i++) {
         this.handleChangeStocks(action, i, deep)
@@ -278,7 +279,6 @@ export default {
         let collection = ''
 
         deep.forEach(item => {
-          console.log(combination, item.combination, isEqual(combination, item.combination))
           if (isEqual(combination, item.combination)) {
             collection = item
             return false
@@ -300,8 +300,6 @@ export default {
       })
 
       this.computeRowspan()
-      // console.log(data)
-      // return data
     },
     // 获取规格属性
     handleGetSpecificationAttribute (indent, index) {
@@ -337,8 +335,6 @@ export default {
     },
     // 设置rowspan
     handleSpanMethod ({ row, column, rowIndex, columnIndex }) {
-      console.log(row, column, rowIndex, columnIndex)
-
       for (let i = 0; i < this.specification.length; i++) {
         if (columnIndex === i) {
           if (this.spanCollection[i] && this.spanCollection[i][rowIndex]) {
