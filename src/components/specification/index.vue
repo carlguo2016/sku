@@ -393,16 +393,32 @@ export default {
           attribute: [
             '红色', '白色', '黑色'
           ]
+        },
+        {
+          name: '尺寸',
+          attribute: [
+            'xxl', 'xxxl'
+          ]
         }
       ]
 
       this.skus = [
         {
-          price: 0,
-          stock: 0,
+          price: 100.00,
+          stock: 999999,
+          marked_price: 110.00,
+          combination: {
+            '颜色': '红色',
+            '尺寸': 'xxl'
+          }
+        },
+        {
+          price: 99.00,
+          stock: 100.00,
           marked_price: 0,
           combination: {
-            '颜色': '红色'
+            '颜色': '红色',
+            '尺寸': 'xxxl'
           }
         },
         {
@@ -410,7 +426,8 @@ export default {
           stock: 0,
           marked_price: 0,
           combination: {
-            '颜色': '白色'
+            '颜色': '白色',
+            '尺寸': 'xxl'
           }
         },
         {
@@ -418,7 +435,26 @@ export default {
           stock: 0,
           marked_price: 0,
           combination: {
-            '颜色': '黑色'
+            '颜色': '白色',
+            '尺寸': 'xxxl'
+          }
+        },
+        {
+          price: 0,
+          stock: 0,
+          marked_price: 0,
+          combination: {
+            '颜色': '黑色',
+            '尺寸': 'xxl'
+          }
+        },
+        {
+          price: 0,
+          stock: 0,
+          marked_price: 0,
+          combination: {
+            '颜色': '黑色',
+            '尺寸': 'xxxl'
           }
         }
       ]

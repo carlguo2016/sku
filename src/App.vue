@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div class="container">
-      <specification :spec="spec" :sku="sku" @change-spec="handleChangeSpec" @change-sku="handleChangeSku" />
+      <specification test :spec="spec" :sku="sku" @change-spec="handleChangeSpec" @change-sku="handleChangeSku" />
     </div>
   </div>
 </template>
